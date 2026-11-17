@@ -7,6 +7,8 @@ h1,h2,h3{color:#122421;line-height:1.35;word-break:keep-all}h1{font-size:clamp(1
 p{margin:.4rem 0 .85rem;overflow-wrap:anywhere}.credit{font-size:.93rem;color:var(--dim);margin-bottom:1rem}.note{font-size:.91rem;color:var(--dim)}
 a{color:var(--link);text-underline-offset:.2em}a:focus-visible{outline:2px solid var(--link);outline-offset:3px}
 table{width:100%;border-collapse:collapse;margin:.6rem 0 .9rem;font-size:.93rem;line-height:1.52;overflow-wrap:anywhere}td,th{border:1px solid var(--line);padding:.53rem .6rem;text-align:left;vertical-align:top}th{background:var(--tint);font-weight:700}
+pre{overflow:auto;margin:.6rem 0 1rem;padding:.75rem;background:var(--tint);border:1px solid var(--line);border-radius:6px;font-size:.83rem}
+button.copy{background:var(--link);color:#fff;border:0;border-radius:6px;padding:.45rem .8rem;font:inherit;cursor:pointer}
 @media(max-width:510px){body{padding:.55rem}main{padding:1rem}td,th{padding:.36rem .4rem;font-size:.88rem}}
 @media print{body,main{background:#fff;padding:0;border:0}h1,h2,h3{break-after:avoid}tr{break-inside:avoid}a{color:#111}}
 </style></head><body><main>
@@ -15,6 +17,7 @@ table{width:100%;border-collapse:collapse;margin:.6rem 0 .9rem;font-size:.93rem;
 <p>학교별로 빈 양식을 복사해 학생용 웹앱을 배포합니다. 학생은 공통 주소 하나에서 반·번호·이름·점수를 제출하고, 담임은 공유받은 반별 시트에서 점수와 제출 현황을 확인합니다.</p>
 <p>초기 공개판에서는 학생 이름을 받지 않았습니다. 대교협 가채점 엑셀 양식에 반·번호와 이름이 들어가므로, 제출용 파일을 다시 입력하는 일을 줄이기 위해 현재 공개판에는 이름 입력란을 추가했습니다. 이름과 점수는 학교의 비공개 수합 시트에 저장됩니다.</p>
 <p>준비물  <a href="https://docs.google.com/spreadsheets/d/1C66Rnk6onvVhiUiviBCcJpz2BGPJ02TlCZyYQ7jSCg0/copy">도름스용 빈 템플릿 열기</a></p>
+<p><a href="#update-existing">이미 배포한 학교 · 기존 학생 링크로 수정 적용하기</a></p>
 <h2>1 내 드라이브에 사본 만들기</h2>
 <p><strong>파일 → 사본 만들기</strong>를 눌러 학교에서 운영할 Google 계정의 내 드라이브에 저장합니다. 사본의 공유를 열어 일반 액세스가 <strong>제한됨</strong>인지 확인합니다.</p>
 <h2>2 사본에서 최초 설정하기</h2>
@@ -32,6 +35,59 @@ table{width:100%;border-collapse:collapse;margin:.6rem 0 .9rem;font-size:.93rem;
 <h2>4 배포 확인하기</h2>
 <p>시크릿 창에서 웹 앱 주소를 열어 가짜 점수 한 건을 제출합니다. 명단 대조를 켠 경우 검증용 명단에 넣은 가짜 학번·이름으로 확인합니다. 학교 사본의 가채점과 제출기록에 들어왔는지 확인한 뒤 시험용 명단과 제출 행만 정리합니다.</p>
 <p class="note">학생에게 보낼 링크는 배포 화면에서 복사한 웹 앱 URL입니다. 도름스 게시글에는 위의 빈 템플릿 링크를 올립니다.</p>
+<h2 class="section" id="update-existing">이미 배포한 학교 · 기존 학생 링크로 수정 적용하기</h2>
+<p>학교명, 학교 색, 입력 마감 등 설정 탭의 값은 학생 링크를 다시 열면 적용됩니다. 앱 코드 수정은 배포했던 계정으로 기존 학교 수합 시트에서 진행합니다.</p>
+<ol>
+<li>기존 수합 시트에서 <strong>확장 프로그램 → Apps Script</strong>를 엽니다. 해당 수정 안내에 지정된 파일과 내용을 반영한 뒤 저장합니다.</li>
+<li><strong>배포 → 배포 관리</strong>에서 학생들에게 보낸 주소와 일치하는 기존 배포를 선택합니다. <strong>수정(연필) → 버전에서 새 버전 → 배포</strong>를 누릅니다. 이 순서로 하면 기존 수합 시트, 제출 데이터, 학생 URL을 그대로 사용합니다.</li>
+<li>휴대폰에서 같은 학생 링크를 다시 열어 바뀐 부분을 확인합니다.</li>
+</ol>
+<h3>v9 모바일 입력칸 수정</h3>
+<p>이미 배포한 도름스판에서 국어·수학 점수칸이 겹치거나 미응시 표시가 불분명하면, Apps Script의 <strong>Index.html</strong>을 엽니다. <strong><code>&lt;/style&gt;</code> 바로 위에 새 줄</strong>을 만들어 아래 CSS 전체를 한 번 붙여넣고 저장합니다. 이어서 위 2~3번을 진행합니다. 최신 템플릿에는 이 수정이 적용돼 있습니다.</p>
+<p><button class="copy" id="copy-mobile-css" type="button">모바일 수정 CSS 복사</button> <span id="copy-mobile-status" role="status"></span></p>
+<pre><code id="mobile-css-patch">/* v9 모바일 점수칸·미응시 수정 */
+.score {
+  display:flex; align-items:center; justify-content:flex-end; gap:8px;
+  height:56px; padding:0 16px; background:#fff;
+  border:1.5px solid var(--line); border-bottom:3px solid var(--pine);
+  border-radius:var(--r-s) var(--r-s) 3px 3px;
+  transition:border-color .15s, box-shadow .15s;
+}
+.score:focus-within { border-color:var(--pine-2); box-shadow:0 0 0 4px rgba(15,100,96,.18); }
+.score input {
+  -webkit-appearance:none; appearance:none;
+  flex:1; min-width:0; width:0; height:100%; border:0; padding:0;
+  background:transparent; outline:none; font-family:inherit; font-size:28px;
+  font-weight:800; text-align:right; color:var(--ink); font-variant-numeric:tabular-nums;
+}
+.score input:focus { box-shadow:none; }
+.score.off { background:#f3f5f4; border-bottom-color:var(--line); }
+.skip { position:relative; }
+.skip input { position:absolute; left:8px; width:18px; height:18px; margin:0; opacity:0; }
+.skip span { display:inline-flex; align-items:center; gap:6px; }
+.skip span::before {
+  content:""; display:grid; place-items:center; width:18px; height:18px; flex:none;
+  border:1.5px solid currentColor; border-radius:5px; font-size:14px; font-weight:800; line-height:1;
+}
+.skip input:checked + span::before { content:"✓"; background:#fff; border-color:#fff; color:var(--pine); }
+@media (max-width:600px) { .score input { font-size:26px; } }</code></pre>
+<script>
+document.getElementById('copy-mobile-css').addEventListener('click', async () => {
+  const code = document.getElementById('mobile-css-patch');
+  const status = document.getElementById('copy-mobile-status');
+  try {
+    await navigator.clipboard.writeText(code.textContent);
+    status.textContent = '복사했습니다.';
+  } catch {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(code);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    status.textContent = '선택된 코드를 Ctrl+C 또는 ⌘C로 복사해 주세요.';
+  }
+});
+</script>
 <h2 class="section">점수 수합과 담임 공유</h2>
 <p>수합 담당자는 학교 사본에서 전체 점수와 제출기록을 확인합니다. 담임에게는 담당 반만 담긴 별도 파일을 공유합니다.</p>
 <h3>담임용 파일 만들고 갱신하기</h3>

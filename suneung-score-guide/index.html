@@ -42,10 +42,10 @@ button.copy{background:var(--link);color:#fff;border:0;border-radius:6px;padding
 <li><strong>배포 → 배포 관리</strong>에서 학생들에게 보낸 주소와 일치하는 기존 배포를 선택합니다. <strong>수정(연필) → 버전에서 새 버전 → 배포</strong>를 누릅니다. 이 순서로 하면 기존 수합 시트, 제출 데이터, 학생 URL을 그대로 사용합니다.</li>
 <li>휴대폰에서 같은 학생 링크를 다시 열어 바뀐 부분을 확인합니다.</li>
 </ol>
-<h3>v10 모바일 입력 화면 수정</h3>
-<p>아래 CSS 한 블록에 점수칸 겹침, 미응시 표시, 탐구·제2외국어 과목명 잘림 수정이 들어 있습니다. 기존 사본의 <strong>Index.html</strong>에서 <strong><code>&lt;/style&gt;</code> 바로 위에 새 줄</strong>을 만들어 한 번 붙여넣고 저장합니다. v9 수정 CSS를 이미 붙여넣었다면 그 아래에 이어 붙입니다. 위 2~3번을 진행한 뒤, 휴대폰에서 탐구 과목을 선택해 과목명이 다 보이는지 확인합니다. 최신 템플릿에는 이 수정이 적용돼 있습니다.</p>
+<h3>v11 모바일 입력 화면 수정</h3>
+<p>아래 CSS 한 블록에 점수칸 겹침, 미응시 표시, 탐구·제2외국어 과목명과 정정 요청 버튼 잘림 수정이 들어 있습니다. 기존 사본의 <strong>Index.html</strong>에서 <strong><code>&lt;/style&gt;</code> 바로 위에 새 줄</strong>을 만들어 한 번 붙여넣고 저장합니다. v9·v10 수정 CSS를 이미 붙여넣었다면 그 아래에 이어 붙입니다. 위 2~3번을 진행한 뒤, 휴대폰에서 탐구 과목을 선택해 과목명이 다 보이는지 확인합니다. 최신 템플릿에는 이 수정이 적용돼 있습니다.</p>
 <p><button class="copy" id="copy-mobile-css" type="button">모바일 수정 CSS 복사</button> <span id="copy-mobile-status" role="status"></span></p>
-<pre><code id="mobile-css-patch">/* v10 모바일 점수칸·미응시·과목 선택창 수정 */
+<pre><code id="mobile-css-patch">/* v11 모바일 점수칸·미응시·과목 선택창·정정 버튼 수정 */
 .score {
   display:flex; align-items:center; justify-content:flex-end; gap:8px;
   height:56px; padding:0 16px; background:#fff;
@@ -70,7 +70,10 @@ button.copy{background:var(--link);color:#fff;border:0;border-radius:6px;padding
   border:1.5px solid currentColor; border-radius:5px; font-size:14px; font-weight:800; line-height:1;
 }
 .skip input:checked + span::before { content:"✓"; background:#fff; border-color:#fff; color:var(--pine); }
-@media (max-width:600px) { .score input { font-size:26px; } }
+@media (max-width:600px) {
+  .score input { font-size:26px; }
+  .dialog-actions { flex-wrap:wrap; }
+}
 .lab { flex-wrap:wrap; }
 .lab label.f { word-break:keep-all; }
 .skip { flex-shrink:0; white-space:nowrap; }
